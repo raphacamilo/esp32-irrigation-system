@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <title>ESP32 Server</title>
+    <style>
+        body { font-family: "Roboto", sans-serif; }
+        table.greyGridTable { border: 2px solid #fff; width: 100%; text-align: center; border-collapse: collapse; }
+        table.greyGridTable td, table.greyGridTable th { border: 0; padding: 3px 4px; }
+        table.greyGridTable tbody td { font-size: 13px; }
+        table.greyGridTable td:nth-child(even) { background: #EBEBEB; }
+        table.greyGridTable thead { background: #fff; border-bottom: 3px solid #333; }
+        table.greyGridTable thead th { font-size: 15px; font-weight: bold; color: #333; text-align: center; border-left: 2px solid #333; }
+        table.greyGridTable thead th:first-child { border-left: none; }
+        table.greyGridTable tfoot td { font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>ESP32</h1>
+        <h2>Dados de Humidade</h2>
+        <table class="greyGridTable">
+            <thead>
+                <tr>
+                    <th>Humidade</th>
+                    <th>Status</th>
+                    <th>Data e Hora</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+    </div>
+    <script>
+        var humidityData = ["ESP32FileData"];
+        function createHumidityRows(rows) {
+            const tbody = document.getElementById("table-body");
+            for (const data of rows) {
+                const hum = data.split(";");
+                const row = document.createElement('tr');
+                const humidityCell = document.createElement('td');
+                const statusCell = document.createElement('td');
+                const timestampCell = document.createElement('td');
+
+                humidityCell.textContent = hum[0] ? `${hum[0]}%` : "N/A";
+                statusCell.textContent = hum[1] || "N/A";
+                timestampCell.textContent = hum[2] || "N/A";
+
+                if (hum[1] === "Acima" || hum[0] === "Abaixo") {
+                    humidityCell.style.color = "red";
+                }
+
+                row.append(humidityCell, statusCell, timestampCell);
+                tbody.appendChild(row);
+            }
+        }
+        createHumidityRows(humidityData);
+    </script>
+</body>
+</html>
